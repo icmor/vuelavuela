@@ -4,6 +4,43 @@ distintos. Usará web-services abiertos para obtener la información necesaria
 manteniendo un caché para peticiones repetidas. Además usará una base de datos
 SQLite para obtener información geográfica a partir de códigos IATA.
 
+## Instalar
+Para obtener el repositorio se puede
+descargar como archivo zip desde github o clonandolo con:
+```bash
+git clone https://github.com/icmor/vuelavuela
+```
+
+Una vez con el repositorio sólo hay que moverse al directorio `vuelavuela` e
+instalar las dependencias con:
+
+```bash
+pip install -r requirements.txt
+```
+
+Para correr cualquier comando se tiene que hacer desde el directorio ancestro.
+Antes de correr la aplicación hay que inicializar la base de datos corriendo:
+
+```bash
+python -m flask --app vuelavuela init-db
+```
+
+Con eso ya podemos ejecutar la aplicación corriendo:
+
+```bash
+python -m flask --app vuelavuela run
+```
+
+La aplicación estará disponible en la dirección https://127.0.0.1:5000
+
+Para correr las pruebas es necesario instalar los módulos:
+
+```bash
+pip install -r requirements_test.txt
+```
+
+y basta con correr `pytest` dentro del directorio ``vuelavuela``
+
 ## Planeación
 ### API
 La app usará el web-service de [Open-meteo](https://api.open-meteo.com/) (el servicio
