@@ -1,5 +1,5 @@
 from . import db
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 import pathlib
 
 
@@ -16,5 +16,9 @@ def create_app(test_config=None):
     @app.route("/")
     def index():
         return render_template("index.html")
+
+    @app.route("/search_airports")
+    def search_airports():
+        return jsonify(db.search(request.args.get("term")))
 
     return app

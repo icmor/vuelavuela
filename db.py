@@ -98,6 +98,21 @@ def populate_tickets():
         raise DBError("Error while trying to read tickets.csv.")
 
 
+def search(term):
+    db = get_db()
+    results = []
+    term = '%' + term + '%'
+    for row in db.execute(
+            "SELECT iata_code, name, municipality from airports WHERE "
+            "iata_code LIKE ? OR  name LIKE ? or municipality LIKE ?",
+            (term, term, term)
+    ):
+        results.append({"value": row["iata_code"],
+                        "label": row["iata_code"] + ': '
+                        + row["name"] + ' - ' + row["municipality"]})
+    return results
+
+
 @click.command('init-db')
 def init_db_command():
     init_db()

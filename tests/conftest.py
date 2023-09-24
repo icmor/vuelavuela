@@ -19,16 +19,6 @@ def app():
     with app.app_context():
         init_db()
         db = get_db()
-        try:
-            db.execute(""" INSERT into airports VALUES('LAX', '
-            Los Angeles / Tom Bradley International Airport', 'Los Angeles',
-            33.942501, -118.407997); """)
-            db.execute(""" INSERT into airports VALUES('MEX', 'Aeropuerto
-            Internacional Lic. Benito Juárez', 'Ciudad de México', 19.435433,
-            -99.082432); """)
-            db.commit()
-        except sqlite3.IntegrityError: # ignore PRIMARY KEY constraint
-            pass
 
     yield app
     os.close(db_fd)

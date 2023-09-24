@@ -5,7 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/static/images/plane.ico">
-    <link rel="stylesheet" href="{{ url_for('static', filename='index.css' )}}">
+    <link rel="stylesheet" href="{{ url_for('static',
+				 filename='jquery-ui.custom/jquery-ui.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <script src="{{ url_for('static',
+		 filename='jquery-ui.custom/external/jquery/jquery.js') }}"></script>
+    <script src="{{ url_for('static',
+		 filename='jquery-ui.custom/jquery-ui.min.js') }}"></script>
   </head>
   <body>
     <main>
@@ -14,9 +20,9 @@
       <div class="forms">
 	<form action="/climate" method="POST" id="airport_form">
 	  <input name="origin" id="origin" placeholder="Aeropuerto Origen"
-		 autocomplete="off" required></input>
+		 class="autocomplete" autocomplete="off" required></input>
 	  <input name="dest" id="dest"  placeholder="Aeropuerto Destino"
-		 autocomplete="off" required></input>
+		 class="autocomplete" autocomplete="off" required></input>
 	</form>
 	<div>
 	  <button form="airport_form">Busca por Aeropuerto</button>
@@ -30,6 +36,27 @@
 	  <button>Busca por ticket</button>
 	</div>
       </div>
+      <script>
+	$(function () {
+	    $(".autocomplete").autocomplete({
+		source: function (request, response) {
+		    $.ajax({
+			url: "{{ url_for('search_airports') }}",
+			dataType: "json",
+			data: {
+			    term: request.term
+			},
+			success: function (data) {
+			    response(data);
+			    console.log(data);
+			}
+		    });
+		},
+		minLength: 2,
+		autoFocus: true
+	    });
+	});
+      </script>
     </main>
   </body>
 </html>

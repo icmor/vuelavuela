@@ -63,6 +63,12 @@ button:hover {
     background-color: #0056b3;
 }
 
+/* JqueryUI widget */
+.ui-widget {
+    font-size: .75em;
+}
+
+
 @media (max-width: 620px) {
     .forms {
 	display: flex;
