@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VuelaVuela</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/static/images/plane.ico">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css' )}}">
+  </head>
+  <body>
+    <main>
+      <h1>VuelaVuela</h1>
+      <h2>Conoce el clima estés donde estés</h2>
+      <div class="forms">
+	<form action="/climate" method="POST" id="airport_form">
+	  <input name="origin" id="origin" placeholder="Aeropuerto Origen"
+		 autocomplete="off" required></input>
+	  <input name="dest" id="dest"  placeholder="Aeropuerto Destino"
+		 autocomplete="off" required></input>
+	</form>
+	<div>
+	  <button form="airport_form">Busca por Aeropuerto</button>
+	</div>
+
+	<form action="/climate" method="POST">
+	  <input name="num_ticket" id="num_ticket" autocomplete="off"
+		 placeholder="No. de ticket" required>
+	</form>
+	<div>
+	  <button>Busca por ticket</button>
+	</div>
+      </div>
+    </main>
+  </body>
+</html>

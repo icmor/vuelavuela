@@ -1,5 +1,5 @@
 from . import db
-from flask import Flask
+from flask import Flask, render_template
 import pathlib
 
 
@@ -12,4 +12,9 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
     db.init_app(app)
+
+    @app.route("/")
+    def index():
+        return render_template("index.html")
+
     return app
