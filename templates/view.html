@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>{{ origin }}-{{ dest }}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{url_for('static', filename='/images/plane.ico')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='view.css') }}">
+  </head>
+  <body>
+    <div class="cards">
+      <div class="card">
+	<h1>{{ origin }}</h1>
+	  {% for hour in forecast[origin] %}
+	  <div class="hourly_forecast">
+	    <span>
+	    {{ hour["time"] }}
+	    </span>
+	    <span>
+	    {{ hour["temperature"] }}°C
+	    {{ hour["humidity"] }}%
+	    {% if hour["precipitation"]	is lt 10 %}
+	    🌞
+	    {% elif hour["precipitation"] is lt 75%}
+	    ☁
+	    {% else %}
+	    💧
+	    {% endif %}
+	    </span>
+	  </div>
+	  {% endfor %}
+      </div>
+      <div class="card">
+	<h1>{{ dest }}</h1>
+	  {% for hour in forecast[dest] %}
+	  <div class="hourly_forecast">
+	    <span>
+	    {{ hour["time"] }}
+	    </span>
+	    <span>
+	    {{ hour["temperature"] }}°C
+	    {{ hour["humidity"] }}%
+	    {% if hour["precipitation"]	is lt 10 %}
+	    🌞
+	    {% elif hour["precipitation"] is lt 75%}
+	    ☁
+	    {% else %}
+	    💧
+	    {% endif %}
+	    </span>
+	  </div>
+	  {% endfor %}
+      </div>
+    </div>
+  </body>
+</html>

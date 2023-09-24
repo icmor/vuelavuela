@@ -68,6 +68,11 @@ button:hover {
     font-size: .75em;
 }
 
+.warning {
+    font-size: .7em;
+    font-family: monospace;
+    color: darkred;
+}
 
 @media (max-width: 620px) {
     .forms {

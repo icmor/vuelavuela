@@ -57,6 +57,15 @@
 	    });
 	});
       </script>
+
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for message in messages %}
+      <div class="warning"> {{ message }} </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
     </main>
   </body>
 </html>
