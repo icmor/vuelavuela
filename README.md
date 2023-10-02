@@ -11,6 +11,10 @@ descargar como archivo zip desde github o clonandolo con:
 git clone https://github.com/icmor/vuelavuela
 ```
 
+Requisitos:
+- Versión de Python >= 3.8
+- Gestor de paquetes pip
+
 Una vez con el repositorio sólo hay que moverse al directorio `vuelavuela` e
 instalar las dependencias con:
 
