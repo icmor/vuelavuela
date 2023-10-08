@@ -5,21 +5,18 @@ import urllib.request
 import urllib.error
 import json
 
-maxsize = 512
-minute_threshold = 45           # minute when current hour gets outdated
-time_fmt = "%Y-%m-%dT%H:%M"
-url = "https://api.open-meteo.com/v1/forecast"
-
 
 def get_forecast(latitude, longitude):
-    if (time_now := dt.datetime.now()).minute >= minute_threshold:
+    if (time_now := dt.datetime.now()).minute >= 45:
         time_now += dt.timedelta(hours=1)
     time_now = time_now.replace(minute=0, second=0, microsecond=0)
     return get_forecast_cached(latitude, longitude, hash(time_now))
 
 
-@lru_cache(maxsize=maxsize)
+@lru_cache(maxsize=512)
 def get_forecast_cached(latitude, longitude, time_hash):
+    time_fmt = "%Y-%m-%dT%H:%M"
+    url = "https://api.open-meteo.com/v1/forecast"
     data = {"latitude": latitude,
             "longitude": longitude,
             "forecast_days": 2,
@@ -38,7 +35,7 @@ def get_forecast_cached(latitude, longitude, time_hash):
         time_now = dt.datetime.strptime(
             weather_data["current_weather"]["time"], time_fmt
         )
-        if time_now.minute >= minute_threshold:
+        if time_now.minute >= 45:
             time_now += dt.timedelta(hours=1)
         time_now = time_now.replace(minute=0)
         hw = weather_data["hourly"]
