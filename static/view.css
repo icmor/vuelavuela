@@ -73,6 +73,7 @@ body {
 @media (max-width: 700px) {
     .card .hourly_forecast {
 	letter-spacing: 0;
+	font-size: 5vw;
     }
 }
 
