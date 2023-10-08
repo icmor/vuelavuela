@@ -6,7 +6,7 @@ import sqlite3
 import urllib.request
 
 
-class DBError(Exception):
+class DBInitError(Exception):
     pass
 
 
@@ -28,9 +28,9 @@ def init_db():
         setup_tables()
         populate_airports()
         populate_tickets()
-    except DBError as err:
-        print(err)
+    except DBInitError as err:
         current_app.config['DATABASE'].unlink()
+        raise err
 
 
 def setup_tables():
@@ -80,14 +80,14 @@ def populate_airports():
             db.executemany("INSERT into airports VALUES(?,?,?,?,?)", rows)
             db.commit()
     except urllib.error.URLError:
-        raise DBError("Error while trying to fetch airport data.")
+        raise DBInitError("Error while trying to fetch airport data.")
 
 
 def populate_tickets():
     db = get_db()
     tickets = pathlib.Path(current_app.root_path) / "tickets.csv"
     if not tickets.exists():
-        raise DBError("File missing: tickets.csv")
+        raise DBInitError("File missing: tickets.csv")
     try:
         with open(tickets) as f:
             reader = csv.reader(f)
@@ -95,7 +95,7 @@ def populate_tickets():
                            (row for row in reader))
             db.commit()
     except csv.Error:
-        raise DBError("Error while trying to read tickets.csv.")
+        raise DBInitError("Error while trying to read tickets.csv.")
 
 
 def search(term):
