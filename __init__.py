@@ -8,6 +8,9 @@ import pathlib
 
 
 def create_app(test_config=None):
+    """Función principal de Flask, crea y configura la aplicación registrando
+    métodos con sus rutas asociadas.
+    """
     app = Flask(__name__, static_url_path='/static')
     root_path = pathlib.Path(app.root_path)
     app.config.from_mapping(DATABASE=root_path / 'db.sqlite3')
@@ -27,6 +30,12 @@ def create_app(test_config=None):
 
     @app.route("/climate", methods=("GET", "POST"))
     def climate():
+        """Función para mostrar el clima. Si recibe un GET request redirecciona
+        al index. Al recibir un POST checa si recibió un número de ticket o dos
+        códigos IATA. Obtiene las coordenadas correspondientes, con estas
+        obtiene los pronósticos usando las funciones en api.py y muestra
+        view.html usando los datos obtenidos.
+        """
         if request.method == "GET":
             return redirect(url_for("index"))
 

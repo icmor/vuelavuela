@@ -7,6 +7,11 @@ import json
 
 
 def get_forecast(latitude, longitude):
+    """Función para obtener el pronóstico de las siguientes 8 horas para la
+    ubicación espicificada. Toma como argumentos una latitud (-90, 90) y una
+    longitud (-180, 180) WSG84. El pronóstico es una lista de diccionarios con
+    las llaves: time, temperature, humidity y precipitation.
+    """
     if (time_now := dt.datetime.now()).minute >= 45:
         time_now += dt.timedelta(hours=1)
     time_now = time_now.replace(minute=0, second=0, microsecond=0)
@@ -15,6 +20,14 @@ def get_forecast(latitude, longitude):
 
 @lru_cache(maxsize=512)
 def get_forecast_cached(latitude, longitude, time_hash):
+    """Función para obtener un pronóstico del clima usando el API Open-Meteo.
+    Toma como argumentos una latitud, longitud y un hash que sirve para
+    almacenar resultados en un caché. Retorna una lista de diccionarios con
+    el pronóstico de las siguientes ocho horas para la ubicación especificada.
+    El caché es un caché lru, la estrategia tomada en este módulo es usar un
+    hash basado en la hora de tal forma que el resultado para una ubicación
+    es válido durante los primeros 45 minutos de la hora en la que se obtuvo.
+    """
     time_fmt = "%Y-%m-%dT%H:%M"
     url = "https://api.open-meteo.com/v1/forecast"
     data = {"latitude": latitude,

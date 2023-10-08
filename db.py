@@ -7,11 +7,15 @@ import urllib.request
 
 
 class DBInitError(Exception):
+    """Clase de error base para la inicialización de la base de datos"""
     pass
 
 
 def get_db():
-    # flask's threading model only allows a single connection per-request
+    """Función para obtener una conección a la base de datos desde un request
+    de Flask. Es necesaria ya que el modelo de threading de Flask sólo permite
+    una conección por thread. Retorna un objeto sqlite3.Connection
+    """
     if 'db' not in g:
         g.db = sqlite3.connect(current_app.config['DATABASE'])
         g.db.row_factory = sqlite3.Row
@@ -19,11 +23,15 @@ def get_db():
 
 
 def close_db(e=None):
+    """Función teardown para que Flask pueda cerrar la base de datos"""
     if db := g.pop('db', None):
         db.close()
 
 
 def init_db():
+    """Función para inicializar la base de datos y popularla con información de
+    aeropuertos y tickets de vuelo.
+    """
     try:
         setup_tables()
         populate_airports()
@@ -34,14 +42,14 @@ def init_db():
 
 
 def setup_tables():
-    """ Setup the database tables:
+    """Función para configurar las tablas de la base de datos con las columnas:
     airports: iata_code, municipality, latitude, longitude, elevation
-    tickets: num_ticket, origin, destination """
+    tickets: num_ticket, origin, destination
+    """
     db = get_db()
     db.execute("DROP TABLE IF EXISTS airports;")
     db.execute("DROP TABLE IF EXISTS tickets;")
 
-    # iata_codes guaranteed to be unique
     db.execute("""
     CREATE TABLE airports (
     iata_code    TEXT PRIMARY KEY,
@@ -65,6 +73,9 @@ def setup_tables():
 
 
 def populate_airports():
+    """Función para llenar la tabla airports con información tomada de
+    OurAirports.
+    """
     url = "https://davidmegginson.github.io/ourairports-data/airports.csv"
     db = get_db()
     try:
@@ -76,7 +87,6 @@ def populate_airports():
                      row["latitude_deg"],
                      row["longitude_deg"])
                     for row in reader if row["iata_code"])
-            # using only generators to avoid loading everything into memory
             db.executemany("INSERT into airports VALUES(?,?,?,?,?)", rows)
             db.commit()
     except urllib.error.URLError:
@@ -84,6 +94,7 @@ def populate_airports():
 
 
 def populate_tickets():
+    """Función para llenar la tabla tickets a partir del archivo tickets.csv"""
     db = get_db()
     tickets = pathlib.Path(current_app.root_path) / "tickets.csv"
     if not tickets.exists():
@@ -99,6 +110,9 @@ def populate_tickets():
 
 
 def search(term):
+    """Función para buscar la base de datos en las columnas de código IATA,
+    nombre del aeropuerto y/o localidad.
+    """
     db = get_db()
     results = []
     term = '%' + term + '%'
@@ -115,10 +129,14 @@ def search(term):
 
 @click.command('init-db')
 def init_db_command():
+    """Comando para inicializar la base de datos"""
     init_db()
     click.echo('Initialized the database.')
 
 
 def init_app(app):
+    """Registra close_db como función teardown e init_db como comando para la
+    línea de comandos.
+    """
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
